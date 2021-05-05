@@ -1,0 +1,2 @@
+# luci-app-easymesh
+easymesh
