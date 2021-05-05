@@ -82,7 +82,6 @@ start(){
 
 		if [ x$mesh_mesh0 != x"wifi-iface" ]; then
 			uci set wireless.mesh0=wifi-iface
-			uci set wireless.mesh0.device=$interface
 			uci set wireless.mesh0.ifname='mesh0'
 			uci set wireless.mesh0.network='nwi_mesh0'
 			uci set wireless.mesh0.mode='mesh'
@@ -90,6 +89,11 @@ start(){
 			uci set wireless.mesh0.mesh_id=$mesh_id
 			uci commit wireless
 		fi
+		if [ x$mesh_mesh0 = x"wifi-iface" ]; then
+			uci set wireless.mesh0.device=$interface
+			uci commit wireless
+		fi
+
 		if [ $encryption -ne 1 ]; then
 			uci set wireless.mesh0.encryption='none'
 			uci commit wireless
@@ -101,8 +105,6 @@ start(){
 			#batctl add if mesh0
 			#brctl addif br-lan bat0 
 			#ifconfig bat0 up
-	else
-		stop
 	fi
 }
 
