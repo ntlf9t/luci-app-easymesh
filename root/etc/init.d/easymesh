@@ -51,6 +51,29 @@ start(){
 			uci commit network
 		fi
 
+		if [ x$mesh_mesh0 != x"wifi-iface" ]; then
+			uci set wireless.mesh0=wifi-iface
+			uci set wireless.mesh0.ifname='mesh0'
+			uci set wireless.mesh0.network='nwi_mesh0'
+			uci set wireless.mesh0.mode='mesh'
+			uci set wireless.mesh0.mesh_fwding='0'
+			uci set wireless.mesh0.mesh_id=$mesh_id
+			uci commit wireless
+		fi
+		if [ x$mesh_mesh0 = x"wifi-iface" ]; then
+			uci set wireless.mesh0.device=$interface
+			uci commit wireless
+		fi
+
+		if [ $encryption -ne 1 ]; then
+			uci set wireless.mesh0.encryption='none'
+			uci commit wireless
+		else
+			uci set wireless.mesh0.encryption='sae'
+			uci set wireless.mesh0.key=$key
+			uci commit wireless
+		fi
+
 		if [ $ap_mode -eq 1 ]; then
 			uci set network.lan.ipaddr=$ipaddr
 			uci set network.lan.netmask=$netmask
@@ -75,33 +98,10 @@ start(){
 			uci delete dhcp.lan.dynamicdhcp
 			uci commit dhcp
 
-			/etc/init.d/firewall enable
-			/etc/init.d/firewall start
+			/etc/init.d/odhcpd enable && /etc/init.d/odhcpd start
+			/etc/init.d/firewall enable && /etc/init.d/firewall start
 			/etc/init.d/network restart		
 		fi
-
-		if [ x$mesh_mesh0 != x"wifi-iface" ]; then
-			uci set wireless.mesh0=wifi-iface
-			uci set wireless.mesh0.ifname='mesh0'
-			uci set wireless.mesh0.network='nwi_mesh0'
-			uci set wireless.mesh0.mode='mesh'
-			uci set wireless.mesh0.mesh_fwding='0'
-			uci set wireless.mesh0.mesh_id=$mesh_id
-			uci commit wireless
-		fi
-		if [ x$mesh_mesh0 = x"wifi-iface" ]; then
-			uci set wireless.mesh0.device=$interface
-			uci commit wireless
-		fi
-
-		if [ $encryption -ne 1 ]; then
-			uci set wireless.mesh0.encryption='none'
-			uci commit wireless
-		else
-			uci set wireless.mesh0.encryption='sae'
-			uci set wireless.mesh0.key=$key
-			uci commit wireless
-		fi		
 			#batctl add if mesh0
 			#brctl addif br-lan bat0 
 			#ifconfig bat0 up
@@ -121,6 +121,11 @@ stop(){
 			uci commit network
 		fi
 
+		if [ x$mesh_mesh0 = x"wifi-iface" ]; then
+			uci delete wireless.mesh0
+			uci commit wireless
+		fi
+
 		if [ $ap_mode -ne 1 ]; then
 			uci delete network.lan.gateway
 			uci delete network.lan.dns
@@ -132,11 +137,6 @@ stop(){
 			/etc/init.d/odhcpd enable && /etc/init.d/odhcpd start
 			/etc/init.d/firewall enable && /etc/init.d/firewall start
 			/etc/init.d/network restart
-		fi
-
-		if [ x$mesh_mesh0 = x"wifi-iface" ]; then
-			uci delete wireless.mesh0
-			uci commit wireless
 		fi
 	fi
 }
