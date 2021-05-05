@@ -14,6 +14,7 @@ gateway=$(uci get easymesh.config.gateway 2>/dev/null)
 dns=$(uci get easymesh.config.dns 2>/dev/null)
 mesh_id=$(uci get easymesh.config.mesh_id 2>/dev/null)
 interface=$(uci get easymesh.config.interface 2>/dev/null)
+mesh0_interface=$(uci get wireless.mesh0.device 2>/dev/null)
 encryption=$(uci get easymesh.config.encryption 2>/dev/null)
 key=$(uci get easymesh.config.key 2>/dev/null)
 
@@ -53,6 +54,7 @@ start(){
 
 		if [ x$mesh_mesh0 != x"wifi-iface" ]; then
 			uci set wireless.mesh0=wifi-iface
+			uci set wireless.mesh0.device=$interface
 			uci set wireless.mesh0.ifname='mesh0'
 			uci set wireless.mesh0.network='nwi_mesh0'
 			uci set wireless.mesh0.mode='mesh'
@@ -61,8 +63,10 @@ start(){
 			uci commit wireless
 		fi
 		if [ x$mesh_mesh0 = x"wifi-iface" ]; then
-			uci set wireless.mesh0.device=$interface
-			uci commit wireless
+			if [ x$mesh0_interface != x$interface ]; then
+				uci set wireless.mesh0.device=$interface
+				uci commit wireless
+			fi
 		fi
 
 		if [ $encryption -ne 1 ]; then
