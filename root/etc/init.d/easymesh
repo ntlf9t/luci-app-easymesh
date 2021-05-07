@@ -11,6 +11,7 @@ lan=$(uci get network.lan.ifname 2>/dev/null)
 ipaddr=$(uci get easymesh.config.ipaddr 2>/dev/null)
 netmask=$(uci get easymesh.config.netmask 2>/dev/null)
 gateway=$(uci get easymesh.config.gateway 2>/dev/null)
+ap_gateway=$(uci get network.lan.gateway 2>/dev/null)
 dns=$(uci get easymesh.config.dns 2>/dev/null)
 mesh_id=$(uci get easymesh.config.mesh_id 2>/dev/null)
 interface=$(uci get easymesh.config.interface 2>/dev/null)
@@ -95,16 +96,18 @@ start(){
 			/etc/init.d/firewall stop && /etc/init.d/firewall disable
 			/etc/init.d/network restart
 		else
-			uci delete network.lan.gateway
-			uci delete network.lan.dns
-			uci commit network
+			if [ x$ap_gateway = x"gateway" ]; then
+				uci delete network.lan.gateway
+				uci delete network.lan.dns
+				uci commit network
 
-			uci delete dhcp.lan.dynamicdhcp
-			uci commit dhcp
+				uci delete dhcp.lan.dynamicdhcp
+				uci commit dhcp
 
-			/etc/init.d/odhcpd enable && /etc/init.d/odhcpd start
-			/etc/init.d/firewall enable && /etc/init.d/firewall start
-			/etc/init.d/network restart		
+				/etc/init.d/odhcpd enable && /etc/init.d/odhcpd start
+				/etc/init.d/firewall enable && /etc/init.d/firewall start
+				/etc/init.d/network restart
+			fi
 		fi
 			#batctl add if mesh0
 			#brctl addif br-lan bat0 
@@ -131,16 +134,18 @@ stop(){
 		fi
 
 		if [ $ap_mode -ne 1 ]; then
-			uci delete network.lan.gateway
-			uci delete network.lan.dns
-			uci commit network
+			if [ x$ap_gateway = x$gateway ]; then
+				uci delete network.lan.gateway
+				uci delete network.lan.dns
+				uci commit network
 
-			uci delete dhcp.lan.dynamicdhcp
-			uci commit dhcp
+				uci delete dhcp.lan.dynamicdhcp
+				uci commit dhcp
 
-			/etc/init.d/odhcpd enable && /etc/init.d/odhcpd start
-			/etc/init.d/firewall enable && /etc/init.d/firewall start
-			/etc/init.d/network restart
+				/etc/init.d/odhcpd enable && /etc/init.d/odhcpd start
+				/etc/init.d/firewall enable && /etc/init.d/firewall start
+				/etc/init.d/network restart
+			fi
 		fi
 	fi
 }
