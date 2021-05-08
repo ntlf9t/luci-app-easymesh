@@ -96,7 +96,7 @@ start(){
 			/etc/init.d/firewall stop && /etc/init.d/firewall disable
 			/etc/init.d/network restart
 		else
-			if [ x$ap_gateway = x"gateway" ]; then
+			if [ x$ap_gateway = x$gateway ]; then
 				uci delete network.lan.gateway
 				uci delete network.lan.dns
 				uci commit network
