@@ -1,0 +1,71 @@
+msgid ""
+msgstr "Content-Type: text/plain; charset=UTF-8"
+
+#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:39
+msgid "AP MODE Enable"
+msgstr ""
+
+#: luci-app-easymesh/luasrc/controller/easymesh.lua:12
+msgid "EASY MESH"
+msgstr ""
+
+#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:13
+msgid "Enable"
+msgstr ""
+
+#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:39
+msgid "Enable or disable AP MODE"
+msgstr ""
+
+#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:13
+msgid "Enable or disable EASY MESH"
+msgstr ""
+
+#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:30
+msgid "Encryption"
+msgstr ""
+
+#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:9
+msgid "General Settings"
+msgstr ""
+
+#: luci-app-easymesh/root/usr/share/rpcd/acl.d/luci-app-easymesh.json:3
+msgid "Grant UCI access for luci-app-easymesh"
+msgstr ""
+
+#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:53
+msgid "IPv4 gateway"
+msgstr ""
+
+#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:48
+msgid "IPv4 netmask"
+msgstr ""
+
+#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:43
+msgid "IPv4-Address"
+msgstr ""
+
+#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:34
+msgid "Key"
+msgstr ""
+
+#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:26
+#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:28
+msgid "MESH ID"
+msgstr ""
+
+#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:17
+msgid "MESH Radio device"
+msgstr ""
+
+#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:9
+msgid "Settings"
+msgstr ""
+
+#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:17
+msgid "The radio device which MESH use"
+msgstr ""
+
+#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:58
+msgid "Use custom DNS servers"
+msgstr ""
