@@ -1,12 +1,7 @@
 -- Copyright (C) 2021 dz <dingzhong110@gmail.com>
 
 local m,s,o
-local SYS  = require "luci.sys"
-local wa = require "luci.tools.webadmin"
-local ipc = require "luci.ip"
-local net = require "luci.model.network".init()
 local sys = require "luci.sys"
-local ifaces = sys.net:devices()
 local uci = require "luci.model.uci".cursor()
 
 -- Basic
@@ -19,10 +14,11 @@ o = s:option(Flag, "enabled", translate("Enable"), translate("Enable or disable 
 o.default = 0
 o.rmempty = false
 
-o = s:option(ListValue, "interface", translate("interface"), translate(""))
-o:value("radio0", "radio0")
-o:value("radio1", "radio1")
-o:value("radio2", "radio2")
+apRadio = s:option(ListValue, "apRadio", translate("MESH Radio device"), translate("The radio device which MESH use"))
+uci:foreach("wireless", "wifi-device",
+							function(s)
+								apRadio:value(s['.name'])
+							end)
 o.default = "radio0"
 o.rmempty = false
 
