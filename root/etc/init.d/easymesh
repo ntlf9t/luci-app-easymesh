@@ -19,7 +19,7 @@ mesh0_apRadio=$(uci get wireless.mesh0.device 2>/dev/null)
 encryption=$(uci get easymesh.config.encryption 2>/dev/null)
 key=$(uci get easymesh.config.key 2>/dev/null)
 
-start(){	
+start(){
 	if [ "$enable" == 1 ]; then
 		if [ "$mesh_bat0" != "interface" ]; then
 			uci set network.bat0=interface
@@ -40,7 +40,7 @@ start(){
 			uci set network.bat0.network_coding='0'
 			uci set network.bat0.hop_penalty='30'
 			uci set network.bat0.isolation_mark='0x00000000/0x00000000'
-			
+
 			uci add_list network.lan.ifname='bat0'
 			uci commit network
 		fi
@@ -84,9 +84,9 @@ start(){
 				uci set network.lan.ipaddr=$ipaddr
 				uci set network.lan.netmask=$netmask
 				uci set network.lan.gateway=$gateway
-				uci set network.lan.dns=$dns
+				uci add_list network.lan.dns=$dns
 				uci commit network
-			
+
 				uci set dhcp.lan.dynamicdhcp='0'
 				uci delete dhcp.lan.ra
 				uci delete dhcp.lan.dhcpv6
@@ -110,7 +110,7 @@ start(){
 			/etc/init.d/network restart
 		fi
 			#batctl add if mesh0
-			#brctl addif br-lan bat0 
+			#brctl addif br-lan bat0
 			#ifconfig bat0 up
 	fi
 }
