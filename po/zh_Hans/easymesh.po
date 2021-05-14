@@ -1,10 +1,6 @@
 msgid ""
 msgstr "Content-Type: text/plain; charset=UTF-8\n"
 
-#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:39
-msgid "AP MODE Enable"
-msgstr "启用 AP 模式"
-
 #: luci-app-easymesh/luasrc/controller/easymesh.lua:12
 msgid "EASY MESH"
 msgstr "简单 MESH"
@@ -12,10 +8,6 @@ msgstr "简单 MESH"
 #: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:13
 msgid "Enable"
 msgstr "启用"
-
-#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:39
-msgid "Enable or disable AP MODE"
-msgstr ""
 
 #: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:13
 msgid "Enable or disable EASY MESH"
@@ -32,18 +24,6 @@ msgstr "基本设置"
 #: luci-app-easymesh/root/usr/share/rpcd/acl.d/luci-app-easymesh.json:3
 msgid "Grant UCI access for luci-app-easymesh"
 msgstr ""
-
-#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:53
-msgid "IPv4 gateway"
-msgstr "IPv4 网关"
-
-#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:48
-msgid "IPv4 netmask"
-msgstr "IPv4 子网掩码"
-
-#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:43
-msgid "IPv4-Address"
-msgstr "IPv4 地址"
 
 #: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:34
 msgid "Key"
@@ -65,7 +45,3 @@ msgstr "设置"
 #: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:17
 msgid "The radio device which MESH use"
 msgstr "使用 MESH 组网的无线设备"
-
-#: luci-app-easymesh/luasrc/model/cbi/easymesh.lua:58
-msgid "Use custom DNS servers"
-msgstr "使用自定义的 DNS 服务器"
