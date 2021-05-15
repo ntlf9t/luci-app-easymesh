@@ -1,6 +1,6 @@
 #!/bin/sh /etc/rc.common
-START=90
-STOP=70
+START=99
+STOP=10
 
 enable=$(uci get easymesh.config.enabled 2>/dev/null)
 mesh_bat0=$(uci get network.bat0 2>/dev/null)
@@ -18,6 +18,18 @@ apRadio=$(uci get easymesh.config.apRadio 2>/dev/null)
 mesh0_apRadio=$(uci get wireless.mesh0.device 2>/dev/null)
 encryption=$(uci get easymesh.config.encryption 2>/dev/null)
 key=$(uci get easymesh.config.key 2>/dev/null)
+
+ap_mode_stop(){
+	uci delete network.lan.gateway
+	uci delete network.lan.dns
+	uci commit network
+
+	uci delete dhcp.lan.dynamicdhcp
+	uci commit dhcp
+
+	/etc/init.d/odhcpd enable && /etc/init.d/odhcpd start
+	/etc/init.d/firewall enable && /etc/init.d/firewall start
+}
 
 start(){	
 	if [ "$enable" == 1 ]; then
@@ -63,6 +75,7 @@ start(){
 			uci set wireless.mesh0.mesh_id=$mesh_id
 			uci commit wireless
 		fi
+
 		if [ "$mesh_mesh0" = "wifi-iface" ]; then
 			if [ "$mesh0_apRadio" != "$apRadio" ]; then
 				uci set wireless.mesh0.device=$apRadio
@@ -95,23 +108,14 @@ start(){
 
 				/etc/init.d/odhcpd stop && /etc/init.d/odhcpd disable
 				/etc/init.d/firewall stop && /etc/init.d/firewall disable
-				/etc/init.d/network restart
 			fi
 		else
-			uci delete network.lan.gateway
-			uci delete network.lan.dns
-			uci commit network
-
-			uci delete dhcp.lan.dynamicdhcp
-			uci commit dhcp
-
-			/etc/init.d/odhcpd enable && /etc/init.d/odhcpd start
-			/etc/init.d/firewall enable && /etc/init.d/firewall start
-			/etc/init.d/network restart
+			ap_mode_stop
 		fi
-			#batctl add if mesh0
-			#brctl addif br-lan bat0 
-			#ifconfig bat0 up
+
+		/etc/init.d/network restart
+	else
+		stop
 	fi
 }
 
@@ -133,20 +137,14 @@ stop(){
 			uci commit wireless
 		fi
 
-			uci delete network.lan.gateway
-			uci delete network.lan.dns
-			uci commit network
+		if [ "$ap_mode" == 1 ]; then
+			ap_mode_stop
+		fi
 
-			uci delete dhcp.lan.dynamicdhcp
-			uci commit dhcp
-
-			/etc/init.d/odhcpd enable && /etc/init.d/odhcpd start
-			/etc/init.d/firewall enable && /etc/init.d/firewall start
-			/etc/init.d/network restart
+		/etc/init.d/network restart
 	fi
 }
 
 restart() {
-	stop
 	start
 }
