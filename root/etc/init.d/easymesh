@@ -138,7 +138,9 @@ stop(){
 		fi
 
 		if [ "$ap_mode" == 1 ]; then
-			ap_mode_stop
+			if [ "$ap_gateway" = "$gateway" ]; then
+				ap_mode_stop
+			fi
 		fi
 
 		/etc/init.d/network restart
