@@ -52,7 +52,7 @@ start(){
 			uci set network.bat0.network_coding='0'
 			uci set network.bat0.hop_penalty='30'
 			uci set network.bat0.isolation_mark='0x00000000/0x00000000'
-			
+
 			uci add_list network.lan.ifname='bat0'
 			uci commit network
 		fi
@@ -97,9 +97,9 @@ start(){
 				uci set network.lan.ipaddr=$ipaddr
 				uci set network.lan.netmask=$netmask
 				uci set network.lan.gateway=$gateway
-				uci set network.lan.dns=$dns
+				uci add_list network.lan.dns=$dns
 				uci commit network
-			
+
 				uci set dhcp.lan.dynamicdhcp='0'
 				uci delete dhcp.lan.ra
 				uci delete dhcp.lan.dhcpv6
