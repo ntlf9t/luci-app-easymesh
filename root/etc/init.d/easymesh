@@ -21,7 +21,7 @@ key=$(uci get easymesh.config.key 2>/dev/null)
 
 ap_mode_stop(){
 	uci delete network.lan.gateway
-	uci delete network.lan.dns
+	uci del_list network.lan.dns
 	uci commit network
 
 	uci delete dhcp.lan.dynamicdhcp
