@@ -4,6 +4,18 @@ msgstr "Content-Type: text/plain; charset=UTF-8\n"
 msgid "easymesh"
 msgstr "easymesh"
 
+msgid "<b>Active node：" .. Nodes .. "</b>"
+msgstr "<b>活动节点：" .. Nodes .. "</b>"
+
+msgid "IF"
+msgstr "IF"
+
+msgid "Neighbor"
+msgstr "节点邻居设备"
+
+msgid "lastseen"
+msgstr "上次连接延时"
+
 msgid "EASY MESH"
 msgstr "简单MESH"
 
