@@ -8,7 +8,6 @@ mesh_nwi_mesh0=$(uci get network.nwi_mesh0 2>/dev/null)
 mesh_mesh0=$(uci get wireless.mesh0 2>/dev/null)
 ap_mode=$(uci get easymesh.config.ap_mode 2>/dev/null)
 lan=$(uci get network.lan.ifname 2>/dev/null)
-lan1=$(cat /etc/easymeshlan | sed -n '1p')
 ipaddr=$(uci get easymesh.config.ipaddr 2>/dev/null)
 netmask=$(uci get easymesh.config.netmask 2>/dev/null)
 gateway=$(uci get easymesh.config.gateway 2>/dev/null)
@@ -60,9 +59,7 @@ start(){
 			uci set network.bat0.hop_penalty='30'
 			uci set network.bat0.isolation_mark='0x00000000/0x00000000'
 
-			echo "" > /etc/easymeshlan
-			echo "$lan" > /etc/easymeshlan
-			uci set network.lan.ifname=$lan1 bat0
+			uci set network.lan.ifname=$lan bat0
 			uci commit network
 		fi
 
@@ -136,7 +133,7 @@ stop(){
 	if [ "$enable" != 1 ]; then
 		if [ "$mesh_bat0" = "interface" ]; then
 			uci delete network.bat0
-			uci set network.lan.ifname=$lan1
+			sed -i 's/ bat0//' /etc/config/network
 			uci commit network
 		fi
 
