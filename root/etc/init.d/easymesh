@@ -59,7 +59,7 @@ start(){
 			uci set network.bat0.hop_penalty='30'
 			uci set network.bat0.isolation_mark='0x00000000/0x00000000'
 
-			uci set network.lan.ifname=$lan bat0
+			uci set network.lan.ifname="${lan} bat0"
 			uci commit network
 		fi
 
