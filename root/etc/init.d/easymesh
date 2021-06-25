@@ -133,8 +133,8 @@ stop(){
 	if [ "$enable" != 1 ]; then
 		if [ "$mesh_bat0" = "interface" ]; then
 			uci delete network.bat0
-			sed -i 's/ bat0//' /etc/config/network
 			uci commit network
+			sed -i 's/ bat0//' /etc/config/network
 		fi
 
 		if [ "$mesh_nwi_mesh0" = "interface" ]; then
