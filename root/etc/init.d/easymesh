@@ -42,6 +42,18 @@ ap_mode_stop(){
 	fi
 }
 
+kvr_stop(){
+			for wifi-iface in $(uci -X show wireless | grep wifi-iface | awk -F'[=]' '{print $1}'); do
+				if [ "${wifi-device}" != "wireless.mesh0" ]; then
+					uci delete ${wifi-device}.ieee80211k
+					uci delete ${wifi-device}.ieee80211v
+					uci delete ${wifi-device}.ieee80211r
+					uci commit network
+				fi
+			done
+			/etc/init.d/dawn stop && /etc/init.d/dawn disable
+fi
+
 start(){	
 	if [ "$enable" == 1 ]; then
 		if [ "$mesh_bat0" != "interface" ]; then
@@ -123,6 +135,8 @@ start(){
 				fi
 			done
 			/etc/init.d/dawn enable && /etc/init.d/dawn start
+		else
+			kvr_stop
 		fi
 
 		if [ "$ap_mode" == 1 ]; then
@@ -173,18 +187,9 @@ stop(){
 		if [ "$mesh_mesh0" = "wifi-iface" ]; then
 			uci delete wireless.mesh0
 			uci commit wireless
-		fi
-		
-		if [ "$kvr" != 1 ]; then
-			for wifi-iface in $(uci -X show wireless | grep wifi-iface | awk -F'[=]' '{print $1}'); do
-				if [ "${wifi-device}" != "wireless.mesh0" ]; then
-					uci delete ${wifi-device}.ieee80211k
-					uci delete ${wifi-device}.ieee80211v
-					uci delete ${wifi-device}.ieee80211r
-					uci commit network
-				fi
-			done
-			/etc/init.d/dawn stop && /etc/init.d/dawn disable
+			if [ "$kvr" != 1 ]; then
+				kvr_stop
+			fi
 		fi
 
 		if [ "$ap_mode" == 1 ]; then
