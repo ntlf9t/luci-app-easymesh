@@ -187,9 +187,8 @@ stop(){
 		if [ "$mesh_mesh0" = "wifi-iface" ]; then
 			uci delete wireless.mesh0
 			uci commit wireless
-			if [ "$kvr" != 1 ]; then
-				kvr_stop
-			fi
+
+			kvr_stop
 		fi
 
 		if [ "$ap_mode" == 1 ]; then
