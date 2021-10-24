@@ -83,24 +83,26 @@ add_wifi_mesh(){
 add_kvr(){
 	kvr=$(uci get easymesh.config.kvr 2>/dev/null)
 	mobility_domain=$(uci get easymesh.config.mobility_domain 2>/dev/null)
-	if [ "$kvr" = 1 ]; then
-		uci set wireless.default_$apall.ieee80211k='1'
-		uci set wireless.default_$apall.rrm_neighbor_report='1'
-		uci set wireless.default_$apall.rrm_beacon_report='1'
-		uci set wireless.default_$apall.ieee80211v='1'
-		uci set wireless.default_$apall.bss_transition='1'
-		uci set wireless.default_$apall.ieee80211r='1'
-		uci set wireless.default_$apall.encryption='psk-mixed'
-		uci set wireless.default_$apall.mobility_domain=$mobility_domain
-		uci set wireless.default_$apall.ft_over_ds='1'
-		uci set wireless.default_$apall.ft_psk_generate_local='1'
-		uci commit wireless
-	else
-		uci delete wireless.default_$apall.ieee80211k
-		uci delete wireless.default_$apall.ieee80211v
-		uci delete wireless.default_$apall.ieee80211r
-		uci commit wireless
-	fi
+	for apall in $(uci -X show wireless | grep wifi-device | awk -F'[.=]' '{print $2}'); do
+		if [ "$kvr" = 1 ]; then
+			uci set wireless.default_$apall.ieee80211k='1'
+			uci set wireless.default_$apall.rrm_neighbor_report='1'
+			uci set wireless.default_$apall.rrm_beacon_report='1'
+			uci set wireless.default_$apall.ieee80211v='1'
+			uci set wireless.default_$apall.bss_transition='1'
+			uci set wireless.default_$apall.ieee80211r='1'
+			uci set wireless.default_$apall.encryption='psk-mixed'
+			uci set wireless.default_$apall.mobility_domain=$mobility_domain
+			uci set wireless.default_$apall.ft_over_ds='1'
+			uci set wireless.default_$apall.ft_psk_generate_local='1'
+			uci commit wireless
+		else
+			uci delete wireless.default_$apall.ieee80211k
+			uci delete wireless.default_$apall.ieee80211v
+			uci delete wireless.default_$apall.ieee80211r
+			uci commit wireless
+		fi
+	done
 }
 
 add_dawn(){
@@ -151,14 +153,13 @@ start(){
 		if [ "$apRadio" = "all" ]; then
 			for apall in $(uci -X show wireless | grep wifi-device | awk -F'[.=]' '{print $2}'); do
 				add_wifi_mesh
-				add_kvr
 			done
 		else
 			apall=$apRadio
 			add_wifi_mesh
-			add_kvr
 		fi
-		
+
+		add_kvr
 		add_dawn
 
 		if [ "$ap_mode" == 1 ]; then
@@ -218,9 +219,9 @@ stop(){
 				uci delete wireless.mesh_$apall
 				uci commit wireless
 			fi
-			add_kvr
 		done
 
+		add_kvr
 		add_dawn
 
 		if [ "$ap_mode" == 1 ]; then
