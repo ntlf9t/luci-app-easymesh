@@ -4,7 +4,6 @@ STOP=10
 
 enable=$(uci get easymesh.config.enabled 2>/dev/null)
 mesh_bat0=$(uci get network.bat0 2>/dev/null)
-mesh_nwi_mesh0=$(uci get network.nwi_mesh0 2>/dev/null)
 ap_mode=$(uci get easymesh.config.ap_mode 2>/dev/null)
 ipaddr=$(uci get easymesh.config.ipaddr 2>/dev/null)
 netmask=$(uci get easymesh.config.netmask 2>/dev/null)
@@ -43,11 +42,21 @@ add_wifi_mesh(){
 	mobility_domain=$(uci get easymesh.config.mobility_domain 2>/dev/null)
 	key=$(uci get easymesh.config.key 2>/dev/null)
 	encryption=$(uci get easymesh.config.encryption 2>/dev/null)
+	mesh_nwi_mesh=$(uci get network.nwi_mesh_${apall} 2>/dev/null)
+
+	if [ "$mesh_nwi_mesh" != "interface" ]; then
+		uci set network.nwi_mesh_$apall=interface
+		uci set network.nwi_mesh_$apall.proto='batadv_hardif'
+		uci set network.nwi_mesh_$apall.mtu='2304'
+		uci set network.nwi_mesh_$apall.master='bat0'
+		uci commit network
+	fi
+
 	if [ "$mesh_apRadio" != "wifi-iface" ]; then
 		uci set wireless.mesh_$apall=wifi-iface
 		uci set wireless.mesh_$apall.device=$apall
 		uci set wireless.mesh_$apall.ifname=mesh_${apall}
-		uci set wireless.mesh_$apall.network='nwi_mesh0'
+		uci set wireless.mesh_$apall.network=nwi_mesh_${apall}
 		uci set wireless.mesh_$apall.mode='mesh'
 		uci set wireless.mesh_$apall.mesh_fwding='0'
 		uci set wireless.mesh_$apall.mesh_id=$mesh_id
@@ -143,14 +152,6 @@ start(){
 			uci commit network
 		fi
 
-		if [ "$mesh_nwi_mesh0" != "interface" ]; then
-			uci set network.nwi_mesh0=interface
-			uci set network.nwi_mesh0.proto='batadv_hardif'
-			uci set network.nwi_mesh0.mtu='2304'
-			uci set network.nwi_mesh0.master='bat0'
-			uci commit network
-		fi
-
 		if [ "$apRadio" = "all" ]; then
 			for apall in $(uci -X show wireless | grep wifi-device | awk -F'[.=]' '{print $2}'); do
 				add_wifi_mesh
@@ -206,13 +207,15 @@ stop(){
 			uci commit network
 		fi
 
-		if [ "$mesh_nwi_mesh0" = "interface" ]; then
-			uci delete network.nwi_mesh0
-			uci commit network
-		fi
-
 		for apall in $(uci -X show wireless | grep wifi-device | awk -F'[.=]' '{print $2}'); do
+			mesh_nwi_mesh=$(uci get network.nwi_mesh_${apall} 2>/dev/null)
 			mesh_mesh=$(uci get wireless.mesh_${apall} 2>/dev/null)
+			
+			if [ "$mesh_nwi_mesh" = "interface" ]; then
+				uci delete network.nwi_mesh_$apall
+				uci commit network
+			fi
+
 			if [ "$mesh_mesh" = "wifi-iface" ]; then
 				uci delete wireless.mesh_$apall
 				uci commit wireless
