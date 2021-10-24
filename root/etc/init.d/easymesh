@@ -6,20 +6,21 @@ enable=$(uci get easymesh.config.enabled 2>/dev/null)
 mesh_bat0=$(uci get network.bat0 2>/dev/null)
 mesh_nwi_mesh0=$(uci get network.nwi_mesh0 2>/dev/null)
 ap_mode=$(uci get easymesh.config.ap_mode 2>/dev/null)
-lan=$(uci get network.lan.ifname 2>/dev/null)
 ipaddr=$(uci get easymesh.config.ipaddr 2>/dev/null)
 netmask=$(uci get easymesh.config.netmask 2>/dev/null)
 gateway=$(uci get easymesh.config.gateway 2>/dev/null)
-ap_gateway=$(uci get network.lan.gateway 2>/dev/null)
-ap_gateway1=$(cat /etc/easymesh | sed -n '1p' 2>/dev/null)
-dns1=$(cat /etc/easymesh | sed -n '2p' 2>/dev/null)
 dns=$(uci get easymesh.config.dns 2>/dev/null)
+ap_ipaddr=$(uci get network.lan.ipaddr 2>/dev/null)
+ap_ipaddr1=$(cat /etc/easymesh | sed -n '1p' 2>/dev/null)
 apRadio=$(uci get easymesh.config.apRadio 2>/dev/null)
 kvr=$(uci get easymesh.config.kvr 2>/dev/null)
 brlan=$(uci get network.@device[0].name 2>/dev/null)
 
 ap_mode_stop(){
-	if [ "$ap_gateway" = "$ap_gateway1" ]; then
+	ap_ipaddr=$(uci get network.lan.ipaddr 2>/dev/null)
+	ap_ipaddr1=$(cat /etc/easymesh | sed -n '1p' 2>/dev/null)
+	dns1=$(cat /etc/easymesh | sed -n '2p' 2>/dev/null)
+	if [ "$ap_ipaddr" = "$ap_ipaddr1" ]; then
 		uci delete network.lan.gateway
 		uci del_list network.lan.dns=$dns1
 		uci commit network
@@ -162,7 +163,7 @@ start(){
 		add_dawn
 
 		if [ "$ap_mode" == 1 ]; then
-			if [ "$ap_gateway" != "$gateway" ]; then
+			if [ "$ap_ipaddr" != "$ipaddr" ]; then
 				uci set network.lan.ipaddr=$ipaddr
 				uci set network.lan.netmask=$netmask
 				uci set network.lan.gateway=$gateway
@@ -170,7 +171,7 @@ start(){
 				uci commit network
 
 				echo "" > /etc/easymesh
-				echo "$gateway" > /etc/easymesh
+				echo "$ipaddr" > /etc/easymesh
 				echo "$dns" >> /etc/easymesh
 
 				uci set dhcp.lan.dynamicdhcp='0'
