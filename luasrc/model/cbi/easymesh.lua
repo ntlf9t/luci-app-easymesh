@@ -79,6 +79,11 @@ enable = s:option(Flag, "kvr", translate("K/V/R"), translate(""))
 enable.default = 1
 enable.rmempty = false
 
+---- 802.11F
+enable = s:option(Flag, "iapp", translate("inter-access point protocol"), translate(""))
+enable.default = 0
+enable.rmempty = false
+
 o = s:option(Value, "mobility_domain", translate("Mobility Domain"), translate("4-character hexadecimal ID"))
 o.default = "4f57"
 o.datatype = "and(hexstring,rangelength(4,4))"
