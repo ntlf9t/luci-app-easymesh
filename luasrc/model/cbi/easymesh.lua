@@ -80,7 +80,7 @@ enable.default = 1
 enable.rmempty = false
 
 ---- 802.11F
-enable = s:option(Flag, "iapp", translate("inter-access point protocol"), translate(""))
+enable = s:option(Flag, "iapp", translate("inter-access point protocol"), translate("Wireless Access Points (APs) running on different vendors can communicate with each other"))
 enable.default = 0
 enable.rmempty = false
 
